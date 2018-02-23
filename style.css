@@ -1,0 +1,54 @@
+.todo-container {
+  margin: 0 auto;
+  max-width: 900px;
+}
+.header {
+  margin-top: 50px;
+  text-align: center;
+  color: darkcyan;
+}
+.text {
+  width: 100%;
+  padding: 0;
+  border: 1px solid lightblue;
+  box-sizing: border-box;
+}
+.button {
+  margin: 0;
+  box-sizing: border-box;
+}
+.button_create {
+  width: 100%;
+  background-color: lightblue;
+}
+.button_del-all {
+  width: 100%;
+  background-color: red;
+}
+.button_done {
+  flex: 10%;
+  background-color: lightgreen;
+}
+.button_del {
+  flex: 10%;
+  background-color: red;
+}
+.list {
+  list-style: none;
+  padding: 0;
+}
+.list__item {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 5px 0;
+}
+
+.item__text {
+  padding: 0.5em;
+  flex: 80%;
+  box-sizing: border-box;
+}
+
+.list__item_done {
+  background-color: lightgreen;
+}

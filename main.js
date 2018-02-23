@@ -1,20 +1,29 @@
-var listBox = document.querySelectorAll(".todo-container")[0];
-var addForm = listBox.querySelector("form[name=addToDo]");
+var listBox = document.querySelector(".todo-container");
+var addBtn = listBox.querySelector(".addItem");
 var delAllBtn = listBox.querySelector("[name=delAll]");
 
-addForm.addEventListener("submit", function(event) {
-  var trg = event.target;
-  addListItem(trg.parentElement, trg.querySelector("[type=text]").value);
+addBtn.addEventListener("click", function(event) {
+  addListItem(event.target.parentElement);
 });
 
-function addListItem(listBox, text) {
+delAllBtn.addEventListener("click", function(event) {
+  deleteAllItems(event.target.parentElement);
+});
+
+function addListItem(listBox) {
   var list = listBox.querySelector(".list");
+  var text = listBox.querySelector("[type=text]").value
   if (!list) {
     list = createList();
-    listBox.appendChild(list);
+    listBox.insertBefore(list, listBox.querySelector("[name=delAll]"));
   }
   var listItem = createListItem(text);
   list.appendChild(listItem);
+}
+
+function deleteAllItems(listBox) {
+  var list = listBox.querySelector(".list");
+  listBox.removeChild(list);
 }
 
 function createListItem(text) {

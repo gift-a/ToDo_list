@@ -13,7 +13,7 @@ ToDoList.prototype.generateToDoList = function(name) {
     textInput = this._createDOMElement("input", {
       class: "text",
       type: "text",
-      value: 'type your "to do"'
+      placeholder: "type your to do and click Create or press Enter"
     }),
     btnCreate = this._createDOMElement("input", {
       class: "button button_create",
@@ -29,12 +29,18 @@ ToDoList.prototype.generateToDoList = function(name) {
     }),
     header = this._createDOMElement("h1", { class: "header" });
 
-  header.innerHTML = name;
+  header.innerHTML = name || "Your To Do List";
   this._appendChildren(todoBox, [header, textInput, btnCreate, btnDelAll]);
   document.body.appendChild(todoBox);
 
   btnCreate.addEventListener("click", function(event) {
     ToDoList.prototype._addListItem(event.target.parentElement);
+  });
+
+  textInput.addEventListener("keydown", function(event) {
+    if (event.keyCode == "13") {
+      ToDoList.prototype._addListItem(event.target.parentElement);
+    }
   });
 
   btnDelAll.addEventListener("click", function(event) {
@@ -48,6 +54,7 @@ ToDoList.prototype._addListItem = function(todoBox) {
   var list = todoBox.querySelector(".list"),
     input = todoBox.querySelector("[type=text]"),
     inputText = input.value;
+  if (!inputText) return;
   listItem = this._createListItem(inputText);
   if (!list) {
     list = this._createList();

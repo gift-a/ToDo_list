@@ -1,77 +1,122 @@
-var todoBox = document.querySelector(".todo-container");
-var btnCreate = todoBox.querySelector("[name=create]");
-var btnDelAll = todoBox.querySelector("[name=delAll]");
-var listBox = todoBox.querySelector(".list__container");
-
-btnCreate.addEventListener("click", function(event) {
-  addListItem(event.target.parentElement);
+window.addEventListener("load", function() {
+  var myToDoList = new ToDoList();
+  //  myToDoList.generateToDoList("Second");
+  //  myToDoList.generateToDoList("One more");
 });
 
-btnDelAll.addEventListener("click", function(event) {
-  deleteAllItems(event.target.parentElement);
-});
+function ToDoList(name) {
+  this._name = name || "Your To Do List";
+  this._todoBox = this.generateToDoList(this._name);
+}
+ToDoList.prototype.generateToDoList = function(name) {
+  var todoBox = this._createDOMElement("div", { class: "todo-container" }),
+    textInput = this._createDOMElement("input", {
+      class: "text",
+      type: "text",
+      value: 'type your "to do"'
+    }),
+    btnCreate = this._createDOMElement("input", {
+      class: "button button_create",
+      type: "button",
+      value: "Create",
+      name: "create"
+    }),
+    btnDelAll = this._createDOMElement("input", {
+      class: "button button_del-all",
+      type: "button",
+      value: "Delete all",
+      name: "delAll"
+    }),
+    header = this._createDOMElement("h1", { class: "header" });
 
-function addListItem(todoBox) {
-  var list = todoBox.querySelector(".list");
-  var input = todoBox.querySelector("[type=text]");
-  var inputText = input.value;
-  var listItem = createListItem(inputText);
+  header.innerHTML = name;
+  this._appendChildren(todoBox, [header, textInput, btnCreate, btnDelAll]);
+  document.body.appendChild(todoBox);
+
+  btnCreate.addEventListener("click", function(event) {
+    ToDoList.prototype._addListItem(event.target.parentElement);
+  });
+
+  btnDelAll.addEventListener("click", function(event) {
+    ToDoList.prototype._deleteAllItems(event.target.parentElement);
+  });
+
+  return todoBox;
+};
+
+ToDoList.prototype._addListItem = function(todoBox) {
+  var list = todoBox.querySelector(".list"),
+    input = todoBox.querySelector("[type=text]"),
+    inputText = input.value;
+  listItem = this._createListItem(inputText);
   if (!list) {
-    list = createList();
+    list = this._createList();
     todoBox.insertBefore(list, todoBox.querySelector("[name=delAll]"));
   }
   list.appendChild(listItem);
   input.value = "";
-}
+};
 
-function createListItem(text) {
-  var listItem = document.createElement("li"),
-    listText = document.createElement("span"),
-    doneBtn = document.createElement("input"),
-    delBtn = document.createElement("input");
-  listItem.className = "list__item";
-  listText.className = "item__text";
+ToDoList.prototype._createListItem = function(text) {
+  var listItem = this._createDOMElement("li", { class: "list__item" }),
+    listText = this._createDOMElement("span", { class: "item__text" }),
+    doneBtn = this._createDOMElement("input", {
+      class: "button button_done",
+      type: "Button",
+      value: "Done!",
+      name: "done"
+    }),
+    delBtn = this._createDOMElement("input", {
+      class: "button button_del",
+      type: "Button",
+      value: "Delete",
+      name: "del"
+    });
   listText.innerHTML = text;
-  doneBtn.type = "Button";
-  doneBtn.value = "Done!";
-  doneBtn.setAttribute("name", "done");
-  doneBtn.className = "button button_done";
-  delBtn.type = "Button";
-  delBtn.value = "Delete";
-  delBtn.setAttribute("name", "del");
-  delBtn.className = "button button_del";
 
-  listItem.appendChild(listText);
-  listItem.appendChild(doneBtn);
-  listItem.appendChild(delBtn);
+  this._appendChildren(listItem, [listText, doneBtn, delBtn]);
 
   return listItem;
-}
+};
 
-function createList() {
-  list = document.createElement("ul");
-  list.className = "list";
+ToDoList.prototype._createList = function() {
+  var list = this._createDOMElement("ul", { class: "list" });
   list.addEventListener("click", function(event) {
     var target = event.target;
     if (target.tagName != "INPUT") return;
     if (target.getAttribute("name") == "done") {
-      markItemDone(target.parentElement);
+      ToDoList.prototype._markItemDone(target.parentElement);
     } else if (target.getAttribute("name") == "del") {
-      delItem(target.parentElement);
+      ToDoList.prototype._delItem(target.parentElement);
     }
   });
   return list;
-}
+};
 
-function markItemDone(listItem) {
+// atr - object with keys attributeName: value
+ToDoList.prototype._createDOMElement = function(tagName, atr) {
+  var elem = document.createElement(tagName);
+  for (var key in atr) {
+    elem.setAttribute(key, atr[key]);
+  }
+  return elem;
+};
+
+ToDoList.prototype._appendChildren = function(parent, children) {
+  children.forEach(function(child) {
+    parent.appendChild(child);
+  });
+};
+
+ToDoList.prototype._markItemDone = function(listItem) {
   listItem.classList.add("list__item_done");
-}
+};
 
-function delItem(listItem) {
+ToDoList.prototype._delItem = function(listItem) {
   listItem.parentElement.removeChild(listItem);
-}
+};
 
-function deleteAllItems(todoBox) {
+ToDoList.prototype._deleteAllItems = function(todoBox) {
   var list = todoBox.querySelector(".list");
   todoBox.removeChild(list);
-}
+};

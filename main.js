@@ -1,14 +1,24 @@
 window.addEventListener("load", function() {
   var myToDoList = new ToDoList();
-  //  myToDoList.generateToDoList("Second");
-  //  myToDoList.generateToDoList("One more");
+  console.log(myToDoList.getName());
+  console.dir(myToDoList.getToDoBox());
 });
 
 function ToDoList(name) {
   this._name = name || "Your To Do List";
-  this._todoBox = this.generateToDoList(this._name);
+  this._todoBox = this._generateToDoList(this._name);
 }
-ToDoList.prototype.generateToDoList = function(name) {
+
+ToDoList.prototype.getName = function() {
+  return this._name;
+};
+
+ToDoList.prototype.getToDoBox = function() {
+  return this._todoBox;
+};
+
+ToDoList.prototype._generateToDoList = function(name) {
+  //create box and inner elements
   var todoBox = this._createDOMElement("div", { class: "todo-container" }),
     textInput = this._createDOMElement("input", {
       class: "text",
@@ -30,100 +40,142 @@ ToDoList.prototype.generateToDoList = function(name) {
     header = this._createDOMElement("h1", { class: "header" });
 
   header.innerHTML = name || "Your To Do List";
+
+  //add elements in document
   this._appendChildren(todoBox, [header, textInput, btnCreate, btnDelAll]);
   document.body.appendChild(todoBox);
 
+  //add handlers for buttons "create" and "delete all"
   btnCreate.addEventListener("click", function(event) {
-    ToDoList.prototype._addListItem(event.target.parentElement);
+    ToDoList.prototype._addListItem(todoBox);
   });
 
   textInput.addEventListener("keydown", function(event) {
     if (event.keyCode == "13") {
-      ToDoList.prototype._addListItem(event.target.parentElement);
+      ToDoList.prototype._addListItem(todoBox);
     }
   });
 
   btnDelAll.addEventListener("click", function(event) {
-    ToDoList.prototype._deleteAllItems(event.target.parentElement);
+    ToDoList.prototype._deleteAllItems(todoBox);
   });
 
   return todoBox;
 };
 
-ToDoList.prototype._addListItem = function(todoBox) {
+ToDoList.prototype._deleteAllItems = function(todoBox) {
+  var list = todoBox.querySelector(".list");
+  todoBox.removeChild(list);
+};
+
+ToDoList.prototype._addListItem = function(parent, children, valueHandler) {
+  //cearch list and input data
   var list = todoBox.querySelector(".list"),
     input = todoBox.querySelector("[type=text]"),
     inputText = input.value;
+  //prevent empty items
   if (!inputText) return;
   listItem = this._createListItem(inputText);
+  //create list if it does not exsist
   if (!list) {
     list = this._createList();
     todoBox.insertBefore(list, todoBox.querySelector("[name=delAll]"));
   }
   list.appendChild(listItem);
+  //clean input field
   input.value = "";
 };
 
-ToDoList.prototype._createListItem = function(text) {
-  var listItem = this._createDOMElement("li", { class: "list__item" }),
-    listText = this._createDOMElement("span", { class: "item__text" }),
-    doneBtn = this._createDOMElement("input", {
-      class: "button button_done",
-      type: "Button",
-      value: "Done!",
-      name: "done"
-    }),
-    delBtn = this._createDOMElement("input", {
-      class: "button button_del",
-      type: "Button",
-      value: "Delete",
-      name: "del"
-    });
-  listText.innerHTML = text;
-
-  this._appendChildren(listItem, [listText, doneBtn, delBtn]);
-
-  return listItem;
-};
-
-ToDoList.prototype._createList = function() {
-  var list = this._createDOMElement("ul", { class: "list" });
-  list.addEventListener("click", function(event) {
+function List() {
+  Entity.call(this);
+  //create empty list
+  this._list = this.createDOMElement("ul", { class: "list" });
+  //add handler for clicks on list items
+  this._list.addEventListener("click", function(event) {
     var target = event.target;
     if (target.tagName != "INPUT") return;
     if (target.getAttribute("name") == "done") {
-      ToDoList.prototype._markItemDone(target.parentElement);
+      List.prototype._markItemDone(target.parentElement);
     } else if (target.getAttribute("name") == "del") {
-      ToDoList.prototype._delItem(target.parentElement);
+      List.prototype._delItem(target.parentElement);
     }
   });
-  return list;
+  return this._list;
+}
+List.prototype = Object.create(Entity.prototype);
+List.prototype.constructor = ListItem;
+List.prototype._markItemDone = function(listItem) {
+  listItem.classList.add("list__item_done");
+};
+List.prototype._delItem = function(listItem) {
+  listItem.parentElement.removeChild(listItem);
 };
 
-// atr - object with keys attributeName: value
-ToDoList.prototype._createDOMElement = function(tagName, atr) {
+function ListItem() {
+  Entity.call(this);
+  //create list item and inner elements
+  this._listItem = this.createDOMElement("li", { class: "list__item" });
+  this._listText = this.createDOMElement("span", { class: "item__text" });
+  this._doneBtn = this._createDOMElement("input", {
+    class: "button button_done",
+    type: "Button",
+    value: "Done!",
+    name: "done"
+  });
+  this._delBtn = this._createDOMElement("input", {
+    class: "button button_del",
+    type: "Button",
+    value: "Delete",
+    name: "del"
+  });
+  this._listText.innerHTML = text;
+  //add inner elements in list item
+  this.createEntity(this._listItem, [
+    this._listText,
+    this._doneBtn,
+    this._delBtn
+  ]);
+
+  return this._listItem;
+}
+ListItem.prototype = Object.create(Entity.prototype);
+ListItem.prototype.constructor = ListItem;
+
+function Entity() {}
+// multiple appendChild
+// children - array of children
+Entity.prototype.createEntity = function(parent, children) {
+  children.forEach(function(child) {
+    parent.appendChild(child);
+  });
+};
+
+// atr - object with keys {attributeName: value}
+Entity.prototype.createDOMElement = function(tagName, atr) {
   var elem = document.createElement(tagName);
   for (var key in atr) {
     elem.setAttribute(key, atr[key]);
   }
   return elem;
 };
+Entity.prototype.addEntity = function(parent, entity, child, valueHandler) {
+  //cearch list and input data
+  //  var list = todoBox.querySelector(".list"),
+  //    input = todoBox.querySelector("[type=text]"),
+  //    inputText = input.value;
 
-ToDoList.prototype._appendChildren = function(parent, children) {
-  children.forEach(function(child) {
-    parent.appendChild(child);
-  });
-};
+  /************* CHECK ABOVE!!! *****************/
 
-ToDoList.prototype._markItemDone = function(listItem) {
-  listItem.classList.add("list__item_done");
-};
-
-ToDoList.prototype._delItem = function(listItem) {
-  listItem.parentElement.removeChild(listItem);
-};
-
-ToDoList.prototype._deleteAllItems = function(todoBox) {
-  var list = todoBox.querySelector(".list");
-  todoBox.removeChild(list);
+  var value = valueHandler.value;
+  //prevent empty items
+  if (!value) return;
+  child = this._createListItem(inputText);
+  //create list if it does not exsist
+  if (!entity) {
+    entity = this.createEntity(parent, entity);
+    todoBox.insertBefore(list, todoBox.querySelector("[name=delAll]"));
+  }
+  list.appendChild(listItem);
+  //clean input field
+  input.value = "";
 };

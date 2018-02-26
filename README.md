@@ -1,4 +1,4 @@
-![Image alt](https://github.com/gift-a/ToDo_list/blob/oop/ToDo%20list.png)
+![Image alt](https://github.com/gift-a/ToDo_list/blob/oop/img/ToDo%20list.png)
 
 
 # ToDo_list

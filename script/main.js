@@ -67,10 +67,14 @@ ToDoList.prototype.generateToDoList = function(name) {
 
 function List() {
   DOMElem.call(this);
+  this.list = this.createList(); 
   //create empty list
 }
 List.prototype = Object.create(DOMElem.prototype);
 List.prototype.constructor = List;
+List.prototype.addList = function(container) {
+  container.insertBefore(this.list, container.querySelector("[name=delAll]"));
+};
 List.prototype.createList = function() {
   var list = this.createElem("ul", { class: "list" });
   //add handler for clicks on list items
@@ -91,7 +95,7 @@ List.prototype.markItemDone = function(listItem) {
 
 // ******** LI with buttons Done and Del **********
 
-function ListItem(text) {
+function ListItem() {
   DOMElem.call(this);
 }
 ListItem.prototype = Object.create(DOMElem.prototype);
@@ -106,8 +110,8 @@ ListItem.prototype.addListItem = function(container, textHandler) {
   //create list if it does not exsist
   if (!list) {
     var ul = new List();
-    list = ul.createList();
-    container.insertBefore(list, container.querySelector("[name=delAll]"));
+    ul.addList(container);
+    list = ul.list;
   }
   list.appendChild(listItem);
   //clean input field

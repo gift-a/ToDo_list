@@ -130,3 +130,7 @@ $RECYCLE.BIN/
 
 
 dist/
+
+package-lock.json
+package.json
+.editorconfig

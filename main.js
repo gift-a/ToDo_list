@@ -1,8 +1,8 @@
-window.addEventListener("load", function() {
-  var myToDoList = new ToDoList();
-  myToDoList.generateToDoList("My list");
-});
+"use strict";
 
+//ToDoList generates new ToDo list on your page
+// usage: myList = new ToDoList();
+//        muList.generateToDoList(name);
 function ToDoList() {
   DOMElem.call(this);
 }
@@ -38,7 +38,6 @@ ToDoList.prototype.generateToDoList = function(name) {
       }
     }
   ]);
-
   inner[0].innerHTML = name;
 
   //add elements in document
@@ -46,7 +45,6 @@ ToDoList.prototype.generateToDoList = function(name) {
   document.body.appendChild(todoBox);
 
   //add handlers for buttons "create" and "delete all"
-
   inner[1].addEventListener("keydown", function(event) {
     if (event.keyCode == "13") {
       var listItem = new ListItem();
@@ -58,12 +56,10 @@ ToDoList.prototype.generateToDoList = function(name) {
     var listItem = new ListItem();
     listItem.addListItem(todoBox, textHandler);
   });
-
   inner[3].addEventListener("click", function(event) {
     var list = todoBox.querySelector(".list");
     ToDoList.prototype.delElem(list);
   });
-
   return todoBox;
 };
 
@@ -117,7 +113,6 @@ ListItem.prototype.addListItem = function(container, textHandler) {
   //clean input field
   textHandler.value = "";
 };
-
 ListItem.prototype.createListItem = function(text) {
   //create list item and inner elements
   var listItem = this.createElem("li", { class: "list__item" });
@@ -155,7 +150,6 @@ DOMElem.prototype.addElems = function(parent, childrenArr) {
     parent.appendChild(child);
   });
 };
-
 // input attr: object with keys {attributeName: value}
 DOMElem.prototype.createElem = function(tagName, attr) {
   var elem = document.createElement(tagName);
@@ -164,7 +158,6 @@ DOMElem.prototype.createElem = function(tagName, attr) {
   }
   return elem;
 };
-
 // create multiple
 // input: array type [{tag1:{attrubute: value}}, tag2{...}...]
 // output: array of elements
@@ -177,7 +170,6 @@ DOMElem.prototype.createElems = function(tags) {
   }
   return elemArr;
 };
-
 DOMElem.prototype.delElem = function(element) {
   element.parentElement.removeChild(element);
 };

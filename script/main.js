@@ -67,7 +67,11 @@ ToDoList.prototype.generateToDoList = function(name) {
 
 function List() {
   DOMElem.call(this);
+<<<<<<< HEAD
   this.list = this.createList();
+=======
+  this.list = this.createList(); 
+>>>>>>> d9d1e4cc0dde269472516d35ebb270021a1d8e03
   //create empty list
 }
 List.prototype = Object.create(DOMElem.prototype);

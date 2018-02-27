@@ -1,19 +1,25 @@
-.todo-container {
+.page {
+  font-size: 10px;
+}
+.task-container {
   margin: 0 auto;
   max-width: 900px;
 }
 .header {
+  font-size: 4rem;
   margin-top: 50px;
   text-align: center;
   color: darkcyan;
 }
 .text {
+  font-size: 2rem;
   width: 100%;
   padding: 0;
   border: 1px solid lightblue;
   box-sizing: border-box;
 }
 .button {
+  font-size: 2rem;
   margin: 0;
   box-sizing: border-box;
 }
@@ -45,6 +51,7 @@
 }
 
 .item__text {
+  font-size: 2rem;
   padding: 0.5em;
   flex: 80%;
   box-sizing: border-box;

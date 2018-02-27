@@ -1,32 +1,50 @@
 function List() {
   this._list = [];
-  this._lastId = 0;
+  this._newId = 0;
 }
+
 List.prototype.getList = function() {
   return this._list;
 };
-List.prototype.getLastId = function() {
-  return this._lastId;
+
+List.prototype.getTaskById = function(id) {
+  return this._list.find(function(item) {
+    return item.getId() == id;
+  });
 };
-List.prototype.setTask = function(taskModel) {
-  this._list.push(taskModel);
+
+List.prototype.getId = function() {
+  return this._newId;
 };
+
+List.prototype.stepId = function() {
+  this._newId++;
+};
+
+List.prototype.setTask = function(id, description, date) {
+  var task = new Task(id, description, new Date());
+  this._list.push(task);
+  this.stepId();
+};
+
 List.prototype.delTask = function(taskId) {
   var taskIndex;
   this._list.forEach(function(task, index) {
-    if (task.id == taskId) {
+    if (task.getId() == taskId) {
       taskIndex = index;
     }
   });
   this._list.splice(taskIndex, 1);
 };
+
 List.prototype.clearList = function() {
   this._list = [];
-  this._lastId = 0;
+  this._newId = 0;
 };
+
 List.prototype.toggleDone = function(taskId) {
   this._list.forEach(function(task) {
-    if (task.id == taskId) {
+    if (task.getId() == taskId) {
       task.toggleDone();
     }
   });

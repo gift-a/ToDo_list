@@ -1,16 +1,23 @@
 function View(list, container, item) {
-  this._list = list;
-  this._container = container;
+  Controller.call(this, list);
   this._item = item;
+  this._container = container;
+  this.addListeners();
 }
+View.prototype = Object.create(Controller.prototype);
+View.prototype.constructor = View;
 
 View.prototype.refreshList = function() {
-  console.log("tefresh");
+  this._container.list.innerHTML = "";
   var self = this;
-  this._list.getList().forEach(function(elem) {
-    var item = self._item.item.cloneNode();
-    item.dataset.id = elem.getId();
-    item.querySelector("[data-input='text']").innerHTML = description;
+  this._list.getList().forEach(function(task) {
+    var newItem = self._item.item.cloneNode(true);
+    newItem.dataset.id = task.getId();
+    newItem.querySelector(
+      "[data-output='text']"
+    ).innerHTML = task.getDescription();
+    if (task.getIsDone()) newItem.classList.add("list__item_done");
+    self._container.list.appendChild(newItem);
   });
 };
 
@@ -18,64 +25,76 @@ View.prototype.getContainer = function() {
   return this._container;
 };
 
-function Container(
-  controller,
-  container,
-  header,
-  textInput,
-  btnCreate,
-  list,
-  btnDelAll
-) {
-  this._controller = controller;
-  this.container = this.createElem({ div: { class: "taskContainer" } });
+View.prototype.confirmDel = function() {
+  return confirm("Do you really want to delete?");
+};
+
+View.prototype.cleanInput = function() {
+  this._container.textInput.value = "";
+};
+
+View.prototype.addListeners = function() {
+  this._container.textInput.addEventListener(
+    "keydown",
+    this.onPressEnter.bind(this)
+  );
+  this._container.btnCreate.addEventListener(
+    "click",
+    this.onClickCreate.bind(this)
+  );
+  this._container.btnDelAll.addEventListener(
+    "click",
+    this.onClickDelAll.bind(this)
+  );
+  this._container.list.addEventListener("click", this.onClickList.bind(this));
+};
+
+View.prototype.onPressEnter = function(e) {
+  if (e.keyCode == "13") {
+    var description = e.target.value;
+    this.create(description, new Date());
+  }
+};
+
+View.prototype.onClickCreate = function(e) {
+  var description = e.target.parentElement.querySelector("[data-input='text']")
+    .value;
+  this.create(description, new Date());
+};
+
+View.prototype.onClickDelAll = function(e) {
+  this.deleteAll();
+};
+
+View.prototype.onClickList = function(e) {
+  var target = e.target;
+  if (target.tagName != "INPUT") return;
+  var id = target.parentElement.getAttribute("data-id");
+  if (target.getAttribute("data-input") == "done") {
+    this.toggleDone(id);
+  } else if (target.getAttribute("data-input") == "delete") {
+    this.deleteTask(id);
+  }
+};
+
+/**************   Creating of empty List ***************/
+function Container(container, header, textInput, btnCreate, list, btnDelAll) {
+  this.container = this.createElem(container);
   this.header = this.createElem(header);
   this.textInput = this.createElem(textInput);
   this.btnCreate = this.createElem(btnCreate);
   this.list = this.createElem(list);
   this.btnDelAll = this.createElem(btnDelAll);
-  var self = this;
 }
-Container.prototype.initContainer = function(text) {
-  this.header.innerHTML = "Your TO Do List";
+
+Container.prototype.initContainer = function(name) {
+  this.header.innerHTML = name || "Your TO Do List";
   this.container.appendChild(this.header);
   this.container.appendChild(this.textInput);
   this.container.appendChild(this.btnCreate);
   this.container.appendChild(this.list);
   this.container.appendChild(this.btnDelAll);
   document.body.appendChild(this.container);
-
-  this.textInput.addEventListener("keydown", this.onPressEnter);
-  this.btnCreate.addEventListener("click", this.onClickCreate.bind(this));
-  this.btnDelAll.addEventListener("click", this.onClickDelAll);
-  this.list.addEventListener("click", this.onClickList);
-};
-
-Container.prototype.onPressEnter = function(e) {
-  if (e.keyCode == "13") {
-    var description = e.target.value;
-    self._controller.create(description, new Date());
-  }
-};
-
-Container.prototype.onClickCreate = function(e) {
-  var description = e.target.parentElement.querySelector("[data-input='text']")
-    .value;
-  this._controller.create(description, new Date());
-};
-
-Container.prototype.onClickDelAll = function(e) {
-  self._controller.deleteAll();
-};
-
-Container.prototype.onClickList = function(e) {
-  var element = event.target;
-  var id = element.parentElement.getAttribute("data-id");
-  if (element.getAttribute("data-input") == "done") {
-    self._controller.toggleDone(id);
-  } else if (element.getAttribute("data-input") == "delete") {
-    self._controller.deleteTask(id);
-  }
 };
 
 Container.prototype.createElem = function(attrObj) {
@@ -88,15 +107,15 @@ Container.prototype.createElem = function(attrObj) {
   return elem;
 };
 
+/**************   Creating of empty List Item ***************/
 function Item(item, textOutput, done, del) {
-  this.item = this.createElem(item);
   this.textOutput = this.createElem(textOutput);
   this.btnDone = this.createElem(done);
   this.btnDel = this.createElem(del);
+  this.init(item);
 }
-Item.prototype.init = function(text, id) {
-  this.textOutput.innerHTML = text;
-  this.textOutput.dataset.id = id;
+Item.prototype.init = function(itemObj) {
+  this.item = this.createElem(itemObj);
   this.item.appendChild(this.textOutput);
   this.item.appendChild(this.btnDone);
   this.item.appendChild(this.btnDel);
@@ -112,10 +131,9 @@ Item.prototype.createElem = function(attrObj) {
 };
 
 var container = new Container(
-  controller,
   {
     div: {
-      class: "taskContainer"
+      class: "task-container"
     }
   },
   {
@@ -183,8 +201,7 @@ var item = new Item(
     }
   }
 );
+
 container.initContainer();
-//controller.initialize();
 var list = new List();
 var view = new View(list, container, item);
-var controller = new Controller(view, list);

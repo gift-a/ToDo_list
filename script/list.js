@@ -13,7 +13,7 @@ List.prototype.getTaskById = function (id) {
   });
 };
 
-List.prototype.getId = function () {
+List.prototype.getNewId = function () {
   return this._newId;
 };
 
@@ -27,13 +27,8 @@ List.prototype.setTask = function (id, description, date) {
   this.stepId();
 };
 
-List.prototype.delTask = function (taskId) {
-  var taskIndex;
-  this._list.forEach(function (task, index) {
-    if (task.getId() == taskId) {
-      taskIndex = index;
-    }
-  });
+List.prototype.delTask = function (id) {
+  var taskIndex = this._list.indexOf(this.getTaskById(id));
   this._list.splice(taskIndex, 1);
 };
 
@@ -42,6 +37,6 @@ List.prototype.clearList = function () {
   this._newId = 0;
 };
 
-List.prototype.toggleDone = function (taskId) {
-  this.getTaskById(taskId).toggleDone();
+List.prototype.toggleDone = function (id) {
+  this.getTaskById(id).toggleDone();
 };

@@ -3,7 +3,7 @@ function Controller(list) {
 }
 
 Controller.prototype.create = function (description, date) {
-  var id = this._list.getId();
+  var id = this._list.getNewId();
   this._list.setTask(id, description, date);
 };
 

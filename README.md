@@ -1,3 +1,6 @@
+![Image alt](https://github.com/gift-a/ToDo_list/blob/oop/img/ToDo%20list.png)
+
+
 # ToDo_list
 Task 4 To Do list using JS
 

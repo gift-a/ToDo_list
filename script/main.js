@@ -67,11 +67,7 @@ ToDoList.prototype.generateToDoList = function(name) {
 
 function List() {
   DOMElem.call(this);
-<<<<<<< HEAD
   this.list = this.createList();
-=======
-  this.list = this.createList(); 
->>>>>>> d9d1e4cc0dde269472516d35ebb270021a1d8e03
   //create empty list
 }
 List.prototype = Object.create(DOMElem.prototype);
@@ -148,36 +144,6 @@ ListItem.prototype.createListItem = function(text) {
   return listItem;
 };
 
-// ******** DOM Element with main behavior **********
-
-function DOMElem() {}
-// multiple appendChild
-// children - array of children
-DOMElem.prototype.addElems = function(parent, childrenArr) {
-  childrenArr.forEach(function(child) {
-    parent.appendChild(child);
-  });
-};
-// input attr: object with keys {attributeName: value}
-DOMElem.prototype.createElem = function(tagName, attr) {
-  var elem = document.createElement(tagName);
-  for (var key in attr) {
-    elem.setAttribute(key, attr[key]);
-  }
-  return elem;
-};
-// create multiple
-// input: array type [{tag1:{attrubute: value}}, tag2{...}...]
-// output: array of elements
-DOMElem.prototype.createElems = function(tags) {
-  var elemArr = [];
-  for (var i = 0; i < tags.length; i++) {
-    for (var tag in tags[i]) {
-      elemArr.push(this.createElem(tag, tags[i][tag]));
-    }
-  }
-  return elemArr;
-};
 DOMElem.prototype.delElem = function(element) {
   element.parentElement.removeChild(element);
 };

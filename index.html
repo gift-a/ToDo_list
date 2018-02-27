@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="page">
 
 <head>
   <meta charset="UTF-8">
@@ -8,13 +8,10 @@
   <title>To Do List</title>
   <link rel="stylesheet" href="style/style.css">
   <link rel="shortcut icon" href="favicon.ico" type="image/ico">
-  <script src="script/main.js" async></script>
-  <script>
-    window.addEventListener("load", function() {
-      var myToDoList = new ToDoList();
-      myToDoList.generateToDoList();
-    });
-  </script>
+  <script src="script/controller.js" async></script>
+  <script src="script/list.js" async></script>
+  <script src="script/view.js" async></script>
+  <script src="script/task.js" async></script>
 </head>
 
 <body>

@@ -1,23 +1,27 @@
-function Controller(list) {
-  this._list = list;
-}
+"use strict"
 
-Controller.prototype.create = function (description) {
-  this._list.setTask(description);
-};
-
-Controller.prototype.deleteAll = function () {
-  if (!this.confirmDel()) return;
-  this._list.clearList();
-};
-
-Controller.prototype.deleteTask = function (taskId) {
-  if (!this._list.getTaskById(taskId).getIsDone()) {
-    if (!this.confirmDel()) return;
+class Controller {
+  constructor(list) {
+    this._list = list;
   }
-  this._list.delTask(taskId);
-};
 
-Controller.prototype.toggleDone = function (taskId) {
-  this._list.toggleDone(taskId);
-};
+  create(description) {
+    this._list.setTask(description);
+  }
+
+  getTaskById(taskId) {
+    return this._list.getTaskById(taskId);
+  }
+
+  deleteAll() {
+    this._list.clearList();
+  }
+
+  deleteTask(taskId) {
+    this._list.delTask(taskId);
+  }
+
+  toggleDone(taskId) {
+    this._list.toggleDone(taskId);
+  }
+}

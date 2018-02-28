@@ -1,3 +1,5 @@
+"use strict"
+
 class Task {
   constructor(id, description, date = new Date()) {
     // сделать статическим???
@@ -38,11 +40,3 @@ class Task {
     else this.isDone = false;
   }
 }
-
-let task = new Task(1, "my task");
-console.log(task.id);
-console.log(task.description);
-console.log(task.date);
-console.log(task.isDone);
-task.toggleDone();
-console.log(task.isDone);

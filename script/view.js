@@ -1,8 +1,38 @@
-function View(list, container, item) {
-  Controller.call(this, list);
-  this._item = item;
-  this._container = container;
-  this.addListeners();
+"use strict"
+
+class Controller {
+  constructor(list) {
+    this._list = list;
+  }
+
+  create(description) {
+    this._list.setTask(description);
+  }
+
+  getTaskById(taskId) {
+    return this._list.getTaskById(taskId);
+  }
+
+  deleteAll() {
+    this._list.clearList();
+  }
+
+  deleteTask(taskId) {
+    this._list.delTask(taskId);
+  }
+
+  toggleDone(taskId) {
+    this._list.toggleDone(taskId);
+  }
+}
+
+class View extends Controller {
+  constructor(list, container, item) {
+    super(list);
+    this._item = item;
+    this._container = container;
+    this.addListeners();
+  }
 }
 View.prototype = Object.create(Controller.prototype);
 View.prototype.constructor = View;
@@ -67,6 +97,7 @@ View.prototype.onClickCreate = function (e) {
 };
 
 View.prototype.onClickDelAll = function (e) {
+  if (!this.confirmDel()) return;
   this.deleteAll();
   this.refreshList(this._list);
 };
@@ -78,6 +109,9 @@ View.prototype.onClickList = function (e) {
   if (target.getAttribute("data-input") == "done") {
     this.toggleDone(id);
   } else if (target.getAttribute("data-input") == "delete") {
+    if (!this.getTaskById(taskId).isDone) {
+      if (!this.confirmDel()) return;
+    }
     this.deleteTask(id);
   }
   this.refreshList(this._list);

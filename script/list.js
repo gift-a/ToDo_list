@@ -28,12 +28,13 @@ List.prototype.setTask = function (description) {
 };
 
 List.prototype.delTask = function (id) {
-  var taskIndex = this._list.indexOf(this.getTaskById(id));
-  this._list.splice(taskIndex, 1);
+  this._list = this._list.filter(function(item){
+    return item.getId() != id);
+  };
 };
 
 List.prototype.clearList = function () {
-  this._list = [];
+  this._list.length = 0;
   this._newId = 0;
 };
 

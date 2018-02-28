@@ -17,20 +17,16 @@ List.prototype.getNewId = function () {
   return this._newId;
 };
 
-List.prototype.stepId = function () {
-  this._newId++;
-};
-
 List.prototype.setTask = function (description) {
   var task = new Task(this.getNewId(), description, new Date());
   this._list.push(task);
-  this.stepId();
+  this._newId++;
 };
 
 List.prototype.delTask = function (id) {
-  this._list = this._list.filter(function(item){
-    return item.getId() != id);
-  };
+  this._list = this._list.filter(function (item) {
+    return item.getId() != id;
+  });
 };
 
 List.prototype.clearList = function () {

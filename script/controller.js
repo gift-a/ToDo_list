@@ -3,8 +3,7 @@ function Controller(list) {
 }
 
 Controller.prototype.create = function (description, date) {
-  var id = this._list.getNewId();
-  this._list.setTask(id, description, date);
+  this._list.setTask(description, date);
 };
 
 Controller.prototype.deleteAll = function () {

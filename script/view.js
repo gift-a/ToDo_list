@@ -52,7 +52,7 @@ View.prototype.addListeners = function () {
 View.prototype.onPressEnter = function (e) {
   if (e.keyCode == "13") {
     var description = e.target.value;
-    this.create(description, new Date());
+    this.create(description);
     this.refreshList(this._list);
     this.cleanInput();
   }
@@ -61,7 +61,7 @@ View.prototype.onPressEnter = function (e) {
 View.prototype.onClickCreate = function (e) {
   var description = e.target.parentElement.querySelector("[data-input='text']")
     .value;
-  this.create(description, new Date());
+  this.create(description);
   this.refreshList(this._list);
   this.cleanInput();
 };

@@ -21,8 +21,8 @@ List.prototype.stepId = function () {
   this._newId++;
 };
 
-List.prototype.setTask = function (description, date) {
-  var task = new Task(this.getNewId(), description, date);
+List.prototype.setTask = function (description) {
+  var task = new Task(this.getNewId(), description, new Date());
   this._list.push(task);
   this.stepId();
 };

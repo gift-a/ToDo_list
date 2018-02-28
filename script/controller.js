@@ -2,8 +2,8 @@ function Controller(list) {
   this._list = list;
 }
 
-Controller.prototype.create = function (description, date) {
-  this._list.setTask(description, date);
+Controller.prototype.create = function (description) {
+  this._list.setTask(description);
 };
 
 Controller.prototype.deleteAll = function () {
